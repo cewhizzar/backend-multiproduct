@@ -1,26 +1,286 @@
 openapi: 3.0.0
 info:
   title: MultiProduct API
-  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  description: API para gestionar productos en una tienda.
   version: 0.1.9
 
 servers:
-  - url: http://api.example.com/v1
-    description: Optional server description, e.g. Main (production) server
-  - url: http://staging-api.example.com
-    description: Optional server description, e.g. Internal staging server for testing
+  - url: http://localhost:13000
+    description: Servidor local de desarrollo
 
 paths:
-  /users:
+  /api/products/:
     get:
-      summary: Returns a list of users.
-      description: Optional extended description in CommonMark or HTML.
+      tags:
+        - Products
+      summary: Obtener todos los productos
+      description: Recupera la lista de productos disponibles en la tienda.
       responses:
-        "200": # status code
-          description: A JSON array of user names
+        "200":
+          description: Lista de productos encontrados
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+              examples:
+                example-1:
+                  value:
+                    data:
+                      - id: 1
+                        nombre: "Laptop Gaming X2000"
+                        descripcion: "Laptop potente con procesador i7, 16GB RAM y 512GB SSD."
+                        precio: 1500.99
+                        cantidad: 50
+                        categoria: "Electrónica"
+                        imagen_url: "https://png.pngtree.com/png-vector/20240906/ourmid/pngtree-asus-elegant-gaming-laptop-png-image_13763518.png"
+                      - id: 2
+                        nombre: "Smartphone Galaxy Z"
+                        descripcion: "Smartphone de última generación con cámara de 108MP."
+                        precio: 999.99
+                        cantidad: 100
+                        categoria: "Electrónica"
+                        imagen_url: "https://smselectronic.com/wp-content/uploads/2022/08/GALAXY-Z-FLIP-4-256GB-5G-2-2.png"
+        "204":
+          description: No hay productos disponibles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: "No hay productos disponibles"
+        "500":
+          description: Error en el servidor
+
+    post:
+      tags:
+        - Products
+      summary: Crear un nuevo producto
+      description: Crea un nuevo producto en el sistema de productos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+            examples:
+              example-1:
+                value:
+                  nombre: "Laptop Gaming X2000"
+                  descripcion: "Laptop potente con procesador i7, 16GB RAM y 512GB SSD."
+                  precio: 1500.99
+                  cantidad: 50
+                  categoria: "Electrónica"
+                  imagen_url: "https://png.pngtree.com/png-vector/20240906/ourmid/pngtree-asus-elegant-gaming-laptop-png-image_13763518.png"
+      responses:
+        "201":
+          description: Producto creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                example-1:
+                  value:
+                    id: 3
+                    nombre: "Laptop Gaming X2000"
+                    descripcion: "Laptop potente con procesador i7, 16GB RAM y 512GB SSD."
+                    precio: 1500.99
+                    cantidad: 50
+                    categoria: "Electrónica"
+                    imagen_url: "https://png.pngtree.com/png-vector/20240906/ourmid/pngtree-asus-elegant-gaming-laptop-png-image_13763518.png"
+        "400":
+          description: El producto ya existe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "El producto Laptop Gaming X2000 ya existe"
+                  status:
+                    type: integer
+                    example: 400
+        "500":
+          description: Error al crear el producto
+
+  /api/products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Obtener un producto por ID
+      description: Recupera los detalles de un producto específico por su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del producto que deseas consultar.
+      responses:
+        "200":
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    nombre: "Laptop Gaming X2000"
+                    descripcion: "Laptop potente con procesador i7, 16GB RAM y 512GB SSD."
+                    precio: 1500.99
+                    cantidad: 50
+                    categoria: "Electrónica"
+                    imagen_url: "https://png.pngtree.com/png-vector/20240906/ourmid/pngtree-asus-elegant-gaming-laptop-png-image_13763518.png"
+        "404":
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: "Producto no encontrado"
+        "500":
+          description: Error en el servidor
+
+    put:
+      tags:
+        - Products
+      summary: Actualizar un producto
+      description: Actualiza los detalles de un producto existente.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del producto que deseas actualizar.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+            examples:
+              example-1:
+                value:
+                  nombre: "Laptop Gaming X2000"
+                  descripcion: "Laptop potente con procesador i7, 16GB RAM y 512GB SSD."
+                  precio: 1500.99
+                  cantidad: 50
+                  categoria: "Electrónica"
+                  imagen_url: "https://png.pngtree.com/png-vector/20240906/ourmid/pngtree-asus-elegant-gaming-laptop-png-image_13763518.png"
+      responses:
+        "200":
+          description: Producto actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    nombre: "Laptop Gaming X2000"
+                    descripcion: "Laptop potente con procesador i7, 16GB RAM y 512GB SSD."
+                    precio: 1500.99
+                    cantidad: 50
+                    categoria: "Electrónica"
+                    imagen_url: "https://png.pngtree.com/png-vector/20240906/ourmid/pngtree-asus-elegant-gaming-laptop-png-image_13763518.png"
+        "400":
+          description: Cuerpo no válido o falta información
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Cuerpo no válido, falta el id del producto"
+                  status:
+                    type: integer
+                    example: 400
+        "404":
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: "Producto no encontrado"
+        "500":
+          description: Error al actualizar el producto
+
+    delete:
+      tags:
+        - Products
+      summary: Eliminar un producto
+      description: Elimina un producto por su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del producto que deseas eliminar.
+      responses:
+        "200":
+          description: Producto eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: "Producto eliminado exitosamente"
+        "404":
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: "Producto no encontrado"
+        "500":
+          description: Error al eliminar el producto
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        descripcion:
+          type: string
+        precio:
+          type: number
+          format: float
+        cantidad:
+          type: integer
+        categoria:
+          type: string
+        imagen_url:
+          type: string
+      required:
+        - nombre
+        - precio
+        - cantidad
