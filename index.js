@@ -1,15 +1,16 @@
-const express = require("express");
-const pool = require("./src/config/db")
-require("dotenv").config();
+const express = require('express');
+const dotenv = require('dotenv');
+const productRoutes = require('./src/routes/productRoutes');
 
-// conectar a DB
-// require("./src/config/db");
-
+dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-// app.use("/tasks", require("./src/routes/tasks"));
+require("./src/config/db");
+
+app.use('/api/products', productRoutes);
+
 app.use('/api-docs', require('./src/config/swagger'))
 
 app.listen(process.env.APP_PORT, () =>
@@ -17,3 +18,5 @@ app.listen(process.env.APP_PORT, () =>
 );
 
 module.exports = app;
+
+
