@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "test": "nyc --check-coverage --lines 30 --reporter=lcov --reporter=text mocha --timeout 200000 --recursive tests --exit"
+    "test": "nyc --check-coverage --lines 30 --reporter=lcov --reporter=text mocha --timeout 200000 --recursive src/tests --exit"
   },
   "keywords": [
     "Products"
@@ -23,9 +23,12 @@
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.5",
-    "supertest": "^6.3.3",
     "swagger-ui-express": "^5.0.1",
     "unit.js": "^2.1.1",
     "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "assert": "^2.1.0",
+    "supertest": "^7.0.0"
   }
 }

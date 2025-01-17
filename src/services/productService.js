@@ -35,7 +35,6 @@ async function createProduct(body) {
       data: newProduct,
     };
   } catch (error) {
-    console.log(error);
     return {
       message: "Algo salió mal al crear el producto",
       status: 500,
@@ -104,7 +103,6 @@ async function updateProduct(id, productData) {
       };
     }
 
-    // Actualizamos
     Object.assign(product, productData);
     await product.save();
 
@@ -113,7 +111,6 @@ async function updateProduct(id, productData) {
       status: 200,
     };
   } catch (error) {
-    console.log("Error al actualizar: ", error);
     return {
       message: "Algo salió mal al actualizar el producto",
       status: 500,
@@ -140,7 +137,6 @@ async function deleteProduct(id) {
       status: 200,
     };
   } catch (error) {
-    console.log("Error al eliminar: ", error);
     return {
       message: "Algo salió mal al eliminar el producto",
       status: 500,
